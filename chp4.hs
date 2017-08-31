@@ -134,6 +134,11 @@ fac' :: Int -> Int
 fac' 0 = 1
 fac' n = n * fac'(n - 1)
 
+fact :: Int -> Int
+fact n | n == 0 = 1
+       | n <= 0 = error "Negative number"
+       | otherwise = n * fact(n - 1)
+
 product' :: Num a => [a] -> a
 product' [] = 1
 product' (n:ns) = n * product' ns
@@ -163,7 +168,7 @@ zip' (x:xs) (y:ys) = (x,y) : zip' xs ys
 drop' :: Int -> [a] -> [a]
 drop' 0 xs = xs
 drop' _ [] = []
-drop' n (x:xs) = drop (n-1) xs
+drop' n (x:xs) = drop' (n-1) xs
 
 fib' :: Int -> Int
 fib' 0 = 0
@@ -184,3 +189,38 @@ even' n = odd' (n - 1)
 odd' :: Int -> Bool
 odd' 0 = False
 odd' n = even' (n-1)
+
+dropt :: Int -> [a] -> [a]
+dropt 0 xs = xs
+dropt _ [] = []
+dropt n (x:xs) = dropt (n-1) xs
+
+sumdown :: Int -> Int
+sumdown 0 = 0
+sumdown n = n + sumdown(n-1)
+
+exp' :: Int -> Int -> Int
+exp' x 0 = 1
+exp' x n = x * (exp' x (n-1))
+
+euclid :: Int -> Int -> Int
+euclid x y  | x == y = x
+            | x > y = euclid (x -y) y
+            | x < y = euclid (y -x) x
+
+and' :: [Bool] -> Bool
+and' [] = False
+and' (False:_) = False
+and' [True] = True
+and' (True:xs) = and' xs
+
+--concat' :: [[a]] -> [a]
+
+replicate2 ::  Int -> a -> [a]
+replicate2 0 x = []
+replicate2 n x = x : replicate2 (n-1) x
+
+pos :: [a] -> Int -> a
+pos [] _ = error "out of bounds"
+pos (x:_) 0 = x
+pos (x:xs) n = pos xs (n-1)
