@@ -245,3 +245,69 @@ filterr p (x:xs) | p x = x : filterr p xs
 
 sumsqreven :: [Int] -> Int
 sumsqreven x = sum ( map (^2) (filter even x))
+
+--foldr definitions
+--[a] is implicit
+sumfr :: Num a => [a] -> a
+sumfr = foldr (+) 0
+
+productfr :: Num a => [a] -> a
+productfr = foldr (*) 1
+
+foldr' :: (a -> b -> b) -> b -> [a] -> b
+foldr' f v [] = v
+foldr' f v (x:xs) = f x (foldr' f v xs)
+
+--Use a lambda function that takes in a value(wildcard) and a number
+--and returns an increment of that number.
+lengthfr :: [a] -> Int
+lengthfr = foldr(\_ n -> 1 + n) 0
+
+--implement reverse with foldr
+-- first create a function to add a new element to the end of a list
+snoc :: a -> [a] -> [a]
+snoc x xs = xs ++ [x]
+
+--reverse recursive with snoc
+reversesn :: [a] -> [a]
+reversesn [] = []
+reversesn (x:xs) = snoc x (reversesn xs)
+
+--foldr
+reversefr :: [a] -> [a]
+reversefr = foldr snoc []
+
+--Creating an auxilary sum function with accumulator similar to
+--scala examples
+summs :: Num a => [a] -> a
+summs = sumaux 0
+          where
+            sumaux v [] = v
+            sumaux v (x:xs) = sumaux (v+x) xs
+
+--This pattern with an accumulator can be summed up as
+-- f v (x:xs) = f (v # x) xs
+-- Function maps empty list to accumulator value
+-- maps non empty list to rescurive processsing of tail using a
+-- new accumulator derived from applying operator to the accumulator
+-- and the head of the list
+
+sumfl :: Num a => [a] -> a
+sumfl = foldl (+) 0
+
+--recursive foldl
+foldl' :: (a -> b -> a) -> a -> [b] -> a
+foldl' f v [] = v
+foldl' f v (x:xs) = foldl' f (f v x) xs
+
+--composition
+-- an operator that takes two functions and returns the composition
+-- of those functions as a new function
+comp :: (b -> c) -> (a -> b) -> (a -> c)
+f `comp` g = \x -> f ( g x)
+
+--using composition
+--sumsqreven can become
+
+sumsqreven' :: [Int] -> Int
+sumsqreven' = sum `comp` map (^2) `comp` filter even
